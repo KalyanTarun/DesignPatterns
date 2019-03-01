@@ -1,0 +1,116 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DesignPatterns
+{
+    //interface for command
+    interface Icommand
+    {
+        void execute();
+    }
+
+    //Dialer and its command classes
+    class Dialer
+    {
+        public void ViewContacts()
+        {
+            Console.WriteLine("Opened Contacts");
+        }
+        public void OpenDialer()
+        {
+            Console.WriteLine("Opened Dialer");
+        }
+    }
+
+    class ContactViewCommand : Icommand
+    {
+        Dialer dialer;
+        public ContactViewCommand(Dialer dialer) { this.dialer = dialer; }
+        public void execute()
+        {
+            dialer.ViewContacts();
+        }
+    }
+
+    class OpenDialerCommand : Icommand
+    {
+        Dialer dialer;
+        public OpenDialerCommand(Dialer dialer) { this.dialer = dialer; }
+        public void execute()
+        {
+            dialer.OpenDialer();
+        }
+
+    }
+
+    //Camera and its command classes
+    class Camera
+    {
+        public void CapturePhoto()
+        {
+            Console.WriteLine("Photo Captured");
+        }
+        public void CaptureVideo()
+        {
+            Console.WriteLine("Video Captured");
+        }
+    }
+
+    class CapturePhotoCommand : Icommand
+    {
+        Camera camera;
+        public CapturePhotoCommand(Camera camera) { this.camera = camera; }
+        public void execute()
+        {
+            camera.CapturePhoto();
+        }
+
+    }
+
+    class CaptureVideoCommand : Icommand
+    {
+        Camera camera;
+        public CaptureVideoCommand(Camera camera) { this.camera = camera; }
+        public void execute()
+        {
+            camera.CaptureVideo();
+        }
+
+    }
+
+    //Driver used to execute commands
+    class GoogleVoiceAssistant
+    {
+        Icommand command;
+        public void GiveCommand(Icommand command)
+        {
+            this.command = command;
+        }
+        public void CommandConfirmed()
+        {
+            command.execute();
+        }
+    }
+
+    class CommandPattern
+    {
+        public static void Main(string[] args)
+        {
+            GoogleVoiceAssistant voiceAssistant = new GoogleVoiceAssistant();
+            Dialer dialer = new Dialer();
+            Camera camera = new Camera();
+
+            voiceAssistant.GiveCommand(new OpenDialerCommand(dialer));
+            voiceAssistant.CommandConfirmed();
+            voiceAssistant.GiveCommand(new ContactViewCommand(dialer));
+            voiceAssistant.CommandConfirmed();
+            voiceAssistant.GiveCommand(new CapturePhotoCommand(camera));
+            voiceAssistant.CommandConfirmed();
+            voiceAssistant.GiveCommand(new CaptureVideoCommand(camera));
+            voiceAssistant.CommandConfirmed();
+        }
+    }
+}

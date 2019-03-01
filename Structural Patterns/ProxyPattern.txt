@@ -1,0 +1,59 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DesignPatterns
+{
+    //Gallery Interface
+    interface IGallery
+    {
+        void ShowImage();
+    }
+
+    //Real Gallery Images existing in storage
+    class GalleryImage : IGallery {
+        private string _iconName;
+        public GalleryImage(string iconName)
+        {
+            _iconName = iconName;
+        }
+        public void ShowImage()
+        {
+            loadImage();
+            Console.WriteLine("Image Loaded");
+        }
+        public void loadImage()
+        {
+            Console.WriteLine("Loading Image...");
+        }
+    }
+
+    //Thumnails which are mapped to Real Images
+    class ThumbnailProxy : IGallery
+    {
+        string iconName;
+        private GalleryImage _galleryImage;
+
+        public ThumbnailProxy(string iconName)
+        {
+            this.iconName = iconName;
+        }
+        public void ShowImage()
+        {
+            _galleryImage = new GalleryImage(iconName);
+            _galleryImage.ShowImage();
+        }
+    }
+
+    class ProxyPattern
+    {
+        public static void Main(string[] args)
+        {
+            string iconName = "Logo.jpg";
+            IGallery gallery = new ThumbnailProxy(iconName);
+            gallery.ShowImage();
+        }
+    }
+}

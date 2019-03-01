@@ -1,0 +1,76 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DesignPatterns
+{
+    class RequirementAnalysis
+    {
+        public virtual void GatherRequirements()
+        {
+            Console.WriteLine("Requirements Gathered");
+        }
+        public virtual void UnderstandRequirements()
+        {
+            Console.WriteLine("Requirements Understood and Refined");
+        }
+    }
+
+    class Implementation
+    {
+        public virtual void preparePrototype()
+        {
+            Console.WriteLine("Prototype prepared");
+        }
+        public virtual void coding()
+        {
+            Console.WriteLine("code written");
+        }
+        public virtual void unitTest()
+        {
+            Console.WriteLine("Bugs Identified and Corrected");
+        }
+    }
+
+    class DocumentationAndTesting
+    {
+        public virtual void betaTesting()
+        {
+            Console.WriteLine("Bugs Identified and send for correction");
+        }
+        public virtual void documentation()
+        {
+            Console.WriteLine("Documented the project");
+        }
+    }
+
+    class ProjectFacade
+    {
+        public void CompleteProject()
+        {
+            RequirementAnalysis requirementAnalysis = new RequirementAnalysis();
+            requirementAnalysis.GatherRequirements();
+            requirementAnalysis.UnderstandRequirements();
+
+            Implementation implementation = new Implementation();
+            implementation.preparePrototype();
+            implementation.coding();
+            implementation.unitTest();
+
+            DocumentationAndTesting documentationAndTesting = new DocumentationAndTesting();
+            documentationAndTesting.betaTesting();
+            documentationAndTesting.documentation();
+        }
+    }
+
+    public class FacadePattern
+    {
+        public static void run()
+        {
+            ProjectFacade project = new ProjectFacade();
+            project.CompleteProject();
+        }
+    }
+}

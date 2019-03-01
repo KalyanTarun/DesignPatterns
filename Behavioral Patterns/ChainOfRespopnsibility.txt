@@ -1,0 +1,125 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DesignPatterns
+{
+    interface IRequestHandler
+    {
+        IRequestHandler PassRequest { set; get; }
+        void ProcessRequest(string request);
+        void Process();
+        string[] GetRequestMatchingKeys();
+
+    }
+
+    abstract class RequestHandler : IRequestHandler
+    {
+        private IRequestHandler passRequest;
+
+        //Contains the next Request handler object for passing the request
+        public virtual IRequestHandler PassRequest
+        {
+            set
+            {
+                passRequest = value;
+            }
+            get { return passRequest; }
+        }
+
+        //Checks whether the request can be processed by the specific request handler or else passes the request to next handler
+        public void ProcessRequest(string request)
+        {
+            bool matches = false;
+            foreach (string req in GetRequestMatchingKeys())
+            {
+                if (request.Contains(req)) { matches = true;break; }
+            }
+            if (matches)
+            {
+                Process();
+            }
+            else
+            {
+                passRequest.ProcessRequest(request);
+            }
+        }
+
+        //Method schedules the order in which requests should be processed
+        public static void HandleRequest(string request)
+        {
+            IRequestHandler hrRequestHandler = new HrRequestHandler();
+            IRequestHandler itRequestHandler = new ItRequestHandler();
+            IRequestHandler facilitiesRequestHandler = new FacilitiesRequestHandler();
+            hrRequestHandler.PassRequest = itRequestHandler;
+            itRequestHandler.PassRequest = facilitiesRequestHandler;
+            hrRequestHandler.ProcessRequest(request);
+           
+        }
+
+        public abstract string[] GetRequestMatchingKeys();
+        public abstract void Process();
+
+
+    }
+
+    class HrRequestHandler : RequestHandler
+    {
+
+        public override string[] GetRequestMatchingKeys()
+        {
+            string[] matches = new string[] { "Joining", "Harrassement", "PayScale" };
+            return matches;
+
+        }
+        public override void Process()
+        {
+            Console.WriteLine("HR Team is processing your request");
+           
+        }
+    }
+
+    class ItRequestHandler : RequestHandler
+    {
+        public override string[] GetRequestMatchingKeys()
+        {
+            string[] matches = new string[] { "Install", "Access", "Software" };
+            return matches;
+
+        }
+        public override void Process()
+        {
+            Console.WriteLine("IT Team is processing your request");
+        }
+    }
+
+    class FacilitiesRequestHandler : RequestHandler
+    {
+        public override string[] GetRequestMatchingKeys()
+        {
+            string[] matches = new string[] { "Cab", "stationary", "cleaning" };
+            return matches;
+
+        }
+        public override void Process()
+        {
+            Console.WriteLine("Facilities Team is processing your request");
+        }
+    }
+   
+    class ChainOfResopnsibility
+    {
+        public static void Main(string[] args)
+        {
+            string request1 = "When is my Joining";
+            string request2 = "Install Visual studio";
+            string request3 = "Provide stationary";
+            //Handling the requests
+            RequestHandler.HandleRequest(request1);
+            RequestHandler.HandleRequest(request2);
+            RequestHandler.HandleRequest(request3);
+        }
+    }
+}

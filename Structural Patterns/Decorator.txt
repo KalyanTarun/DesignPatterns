@@ -1,0 +1,99 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DesignPatterns
+{
+    interface IMobile
+    {
+        string description { get; }
+        int price { get; }
+        void Buy(); 
+    }
+
+    class Iphone : IMobile
+    {
+        public string description
+        {
+            get { return "Apple Iphone"; }
+        }
+        public int price
+        {
+            get { return 75_000; }
+        }
+        public override string ToString()
+        {
+            return description + "  " + price;
+        }
+        public void Buy()
+        {
+            Console.WriteLine("Buyed "+description);
+        }
+  
+
+    }
+
+    //Decorator for additional features
+    abstract class MobileDecorator : IMobile
+    {
+        public IMobile mobile;
+        public MobileDecorator(IMobile mobile)
+        {
+            this.mobile = mobile;
+        }
+        public virtual string description{get;}
+        public  virtual int price { get; }
+        public abstract void Buy();
+       
+
+    }
+
+    class  MobileInsuranceProtection : MobileDecorator
+    {
+        public IMobile mobile;
+        public MobileInsuranceProtection(IMobile mobile) : base(mobile)
+        {
+            this.mobile = mobile;
+        }
+        public override string description
+        {
+            get { return mobile.description; }
+        }
+        public override int price
+        {
+            get { return mobile.price + 5000; }
+        }
+        public override void Buy()
+        {
+            mobile.Buy();          
+            GetInsuranceProtection();
+        }
+        public void GetInsuranceProtection()
+        {
+            Console.WriteLine("Insurance Protection added for " + mobile.description);
+        }
+        public override string ToString()
+        {
+            return description + " " + price;
+        }
+    }
+   
+    class DecoratorPattern
+    {
+        static void Main(string[] args)
+        {
+            //Buying only a mobile phone
+            IMobile mobile = new Iphone();
+            mobile.Buy();
+            Console.WriteLine(mobile);
+            //Buying a mobile phone with Insurance Protection
+            IMobile mobile2 = new Iphone();
+            mobile2 = new MobileInsuranceProtection(mobile2);
+            mobile2.Buy();
+            Console.WriteLine(mobile2);
+            Console.ReadKey();
+        }
+    }
+}
